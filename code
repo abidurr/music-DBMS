@@ -1,0 +1,650 @@
+' Login form
+
+Option Explicit
+
+Public LoginSucceeded As Boolean
+
+Private Sub cmdCANCEL_Click()
+    'set the global var to false
+    'to denote a failed login
+    LoginSucceeded = False
+    End
+End Sub
+
+Private Sub cmdOK_Click()
+    'check for correct password
+    If txtUserName = adcLogin.Recordset.Fields("UserID").Value And txtPassword = adcLogin.Recordset.Fields("Password").Value Then
+        MsgBox "Login Successful!", vbInformation, "Welcome"
+        Unload Me
+        frmMain.Show
+    Else
+        MsgBox "Invalid User Name and/or Password, try again!", , "Login"
+        txtPassword.SetFocus
+    End If
+End Sub
+
+Private Sub Command1_Click()
+frmMain.Show
+End Sub
+
+
+
+' Main form
+
+Private Sub cmdExit_Click()
+End
+End Sub
+
+Private Sub cmdSales_Click()
+Unload Me
+frmSales.Show
+End Sub
+
+Private Sub cmdSearch_Click()
+Unload Me
+frmSearch.Show
+End Sub
+
+Private Sub cmdStock_Click()
+Unload Me
+frmAlbum.Show
+End Sub
+
+
+
+' Search form
+
+Private Sub cmdClose_Click()
+ Unload Me
+ frmMain.Show
+End Sub
+
+Private Sub Command1_Click()
+Unload Me
+frmLogin.Show
+End Sub
+
+Private Sub cmdPrint_Click()
+ If optAID.Value = True Then
+ 
+ If devParadox.rscomAlbumByAID.State = adStateOpen Then
+    devParadox.rscomAlbumByAID.Close
+ End If
+
+
+ devParadox.comAlbumByAID (txtSearch.Text)
+ rptAlbumByAID.Show
+ 
+ End If
+ 
+ 
+  If optAName.Value = True Then
+    If devParadox.rscomAlbumByName.State = adStateOpen Then
+        devParadox.rscomAlbumByName.Close
+    End If
+
+    devParadox.comAlbumByName (txtSearch.Text)
+    rptAlbumByName.Show
+ End If
+ 
+ 
+ If optArtist.Value = True Then
+ 
+ If devParadox.rscomAlbumByArtist.State = adStateOpen Then
+    devParadox.rscomAlbumByArtist.Close
+ End If
+
+
+ devParadox.comAlbumByArtist (txtSearch.Text)
+ rptAlbumByArtist.Show
+ 
+ End If
+ 
+
+ 
+ If optCName.Value = True Then
+ 
+ If devParadox.rscomSaleByCName.State = adStateOpen Then
+    devParadox.rscomSaleByCName.Close
+ End If
+
+
+ devParadox.comSaleByCName (txtSearch.Text)
+ rptSaleByCName.Show
+ 
+ End If
+ 
+ 
+If optSID.Value = True Then
+     If devParadox.rscomSaleBySID.State = adStateOpen Then
+        devParadox.rscomSaleBySID.Close
+     End If
+   devParadox.comSaleBySID (txtSearch.Text)
+   rptSaleBySID.Show
+End If
+ 
+
+ 
+ If optSoldAID.Value = True Then
+ 
+ If devParadox.rscomSaleByAID.State = adStateOpen Then
+    devParadox.rscomSaleByAID.Close
+ End If
+
+ devParadox.comSaleByAID (txtSearch.Text)
+ rptSaleByAID.Show
+ 
+ End If
+
+
+End Sub
+
+
+Private Sub cmdQuery_Click()
+ If optAID.Value = True Then
+    If devParadox.rscomAlbumByAID.State = adStateOpen Then
+        devParadox.rscomAlbumByAID.Close
+    End If
+
+    devParadox.comAlbumByAID (txtSearch.Text)
+    With grdQuery
+        .DataMember = "comAlbumByAID"
+    End With
+ End If
+ If optAName.Value = True Then
+    If devParadox.rscomAlbumByName.State = adStateOpen Then
+        devParadox.rscomAlbumByName.Close
+    End If
+
+    devParadox.comAlbumByName (txtSearch.Text)
+    With grdQuery
+        .DataMember = "comAlbumByName"
+    End With
+ End If
+
+ 
+   If optArtist.Value = True Then
+     If devParadox.rscomAlbumByArtist.State = adStateOpen Then
+         devParadox.rscomAlbumByArtist.Close
+     End If
+
+     devParadox.comAlbumByArtist (txtSearch.Text)
+     With grdQuery
+         .DataMember = "comAlbumByArtist"
+     End With
+   End If
+ 
+
+ 
+  If optSID.Value = True Then
+    If devParadox.rscomSaleBySID.State = adStateOpen Then
+         devParadox.rscomSaleBySID.Close
+    End If
+
+    devParadox.comSaleBySID (txtSearch.Text)
+    With grdQuery
+        .DataMember = "comSaleBySID"
+    End With
+ End If
+ 
+
+ If optCName.Value = True Then
+   If devParadox.rscomSaleByCName.State = adStateOpen Then
+       devParadox.rscomSaleByCName.Close
+   End If
+
+   devParadox.comSaleByCName (txtSearch.Text)
+   With grdQuery
+       .DataMember = "comSaleByCName"
+   End With
+ End If
+ 
+ 
+If optSoldAID.Value = True Then
+  If devParadox.rscomSaleByAID.State = adStateOpen Then
+     devParadox.rscomSaleByAID.Close
+  End If
+     devParadox.comSaleByAID (txtSearch.Text)
+  With grdQuery
+     .DataMember = "comSaleByAID"
+  End With
+End If
+ 
+End Sub
+
+
+' Album form
+
+Private Sub cboGENRE_Click()
+txtGENRE.Text = cboGENRE.Text
+End Sub
+
+Private Sub cmdADD_Click()
+txtAID.Locked = False
+txtANAME.Locked = False
+txtARTIST.Locked = False
+txtGENRE.Locked = False
+txtRELEASED.Locked = False
+txtSONGS.Locked = False
+txtLABEL.Locked = False
+txtPRICE.Locked = False
+txtSTOCK.Locked = False
+txtTIME.Locked = False
+
+adcAlbum.Recordset.MoveLast
+AID = Right(txtAID, 4)
+adcAlbum.Recordset.AddNew
+txtAID.Text = "A" + CStr(AID + 1)
+
+txtRELEASED.Text = Date
+
+txtAID.Locked = True
+
+txtANAME.SetFocus
+End Sub
+
+Private Sub cmdCANCEL_Click()
+adcAlbum.Refresh
+txtAID.Locked = True
+txtANAME.Locked = True
+txtARTIST.Locked = True
+txtGENRE.Locked = True
+txtRELEASED.Locked = True
+txtSONGS.Locked = True
+txtLABEL.Locked = True
+txtPRICE.Locked = True
+txtSTOCK.Locked = True
+txtTIME.Locked = True
+End Sub
+
+Private Sub cmdClose_Click()
+ Unload Me
+ frmMain.Show
+End Sub
+
+Private Sub cmdDELETE_Click()
+varL = MsgBox("Are you sure you want to delete this record?", vbYesNo, "Update")
+If varL = vbYes Then
+    adcAlbum.Recordset.Delete
+    MsgBox "Record deleted successfully.", vbInformation, "Update"
+End If
+End Sub
+
+Private Sub cmdEDIT_Click()
+txtAID.Locked = False
+txtANAME.Locked = False
+txtARTIST.Locked = False
+txtGENRE.Locked = False
+txtRELEASED.Locked = False
+txtSONGS.Locked = False
+txtLABEL.Locked = False
+txtPRICE.Locked = False
+txtSTOCK.Locked = False
+txtTIME.Locked = False
+End Sub
+
+Private Sub cmdSAVE_Click()
+adcAlbum.Recordset.Save
+MsgBox "Record saved successfully!", vbInformation, "Update"
+txtAID.Locked = True
+txtANAME.Locked = True
+txtARTIST.Locked = True
+txtGENRE.Locked = True
+txtRELEASED.Locked = True
+txtSONGS.Locked = True
+txtLABEL.Locked = True
+txtPRICE.Locked = True
+txtSTOCK.Locked = True
+txtTIME.Locked = True
+End Sub
+
+Private Sub Command1_Click()
+Unload Me
+frmLogin.Show
+End Sub
+
+
+Private Sub txtAID_KeyPress(KeyAscii As Integer)
+If KeyAscii = 13 Then
+  If (txtAID.Text = "") Or (txtAID.Text <> 5) Then
+  MsgBox "The 'Album ID' field is invalid!", vbCritical, "Input Error"
+  Else
+  txtPRICE.SetFocus
+  End If
+End If
+End Sub
+
+Private Sub txtANAME_KeyPress(KeyAscii As Integer)
+If KeyAscii = 13 Then
+  If (txtANAME.Text = "") Or (Len(txtANAME.Text) > 35) Then
+  MsgBox "The 'Album Title' field is invalid!", vbCritical, "Input Error"
+  txtANAME.Text = ""
+  Else
+  txtARTIST.SetFocus
+  End If
+End If
+End Sub
+
+
+Private Sub txtARTIST_KeyPress(KeyAscii As Integer)
+If KeyAscii = 13 Then
+  If (txtARTIST.Text = "") Or (Len(txtARTIST.Text) > 25) Then
+  MsgBox "The 'Artist' field is invalid!", vbCritical, "Input Error"
+  txtARTIST.Text = ""
+  Else
+  txtGENRE.SetFocus
+  End If
+End If
+End Sub
+
+Private Sub txtGENRE_KeyPress(KeyAscii As Integer)
+
+If KeyAscii = 13 Then
+  If (txtGENRE.Text = "") Or (IsNumeric(txtGENRE.Text) = True) Or (Len(txtGENRE.Text) > 15) Then
+  MsgBox "The 'Genre' field is invalid!", vbCritical, "Input Error"
+  Else
+  txtLABEL.SetFocus
+  End If
+End If
+
+End Sub
+
+Private Sub txtLABEL_KeyPress(KeyAscii As Integer)
+If KeyAscii = 13 Then
+  If (txtLABEL.Text = "") Or (Len(txtLABEL.Text) > 30) Then
+  MsgBox "The 'Record Label' field is invalid!", vbCritical, "Input Error"
+  txtLABEL.Text = ""
+  Else
+  txtPRICE.SetFocus
+  End If
+End If
+End Sub
+
+Private Sub txtPRICE_KeyPress(KeyAscii As Integer)
+If KeyAscii = 13 Then
+  If (txtPRICE.Text = "") Or (IsNumeric(txtPRICE.Text) = False) Or (Len(txtPRICE.Text) > 5) Or (Val(txtPRICE.Text) < 0) Then
+  MsgBox "The 'Price' field is invalid!", vbCritical, "Input Error"
+  txtPRICE.Text = ""
+  Else
+  txtSTOCK.SetFocus
+  End If
+End If
+End Sub
+
+
+Private Sub txtRELEASED_KeyPress(KeyAscii As Integer)
+If KeyAscii = 13 Then
+  If txtRELEASED Like "##/##/####" Then
+  txtSONGS.SetFocus
+  Else
+  MsgBox "The 'Release Date' field is invalid!", vbCritical, "Input Error"
+  txtRELEASED.Text = ""
+  End If
+End If
+End Sub
+
+
+
+Private Sub txtSONGS_KeyPress(KeyAscii As Integer)
+If KeyAscii = 13 Then
+  If (txtSONGS.Text = "") Or (IsNumeric(txtSONGS.Text) = False) Or (Len(txtSONGS.Text) > 2) Or (Val(txtSONGS.Text) < 0) Then
+  MsgBox "Tracks' field is invalid!", vbCritical, "Input Error"
+  txtSONGS.Text = ""
+  Else
+  txtTIME.SetFocus
+  End If
+End If
+End Sub
+
+Private Sub txtSTOCK_KeyPress(KeyAscii As Integer)
+If KeyAscii = 13 Then
+  If (txtSTOCK.Text = "") Or (IsNumeric(txtSTOCK.Text) = False) Or (Len(txtSTOCK.Text) > 4) Or (Val(txtSTOCK.Text) < 0) Then
+  MsgBox "The 'Stock' field is invalid!", vbCritical, "Input Error"
+  txtSTOCK.Text = ""
+  Else
+  txtRELEASED.SetFocus
+  End If
+End If
+End Sub
+
+Private Sub txtTIME_KeyPress(KeyAscii As Integer)
+If KeyAscii = 13 Then
+  If Left(txtTIME.Text, 2) > 99 Then
+  MsgBox "The 'Play-time' field is invalid!", vbCritical, "Input Error"
+  txtTIME.Text = ""
+  Else
+  cmdSAVE.SetFocus
+  End If
+End If
+End Sub
+
+
+
+' Sales form
+
+Private Sub cboAID_Change()
+ adcAlbum.Recordset.Bookmark = cboAID.SelectedItem
+ txtAID.Text = cboAID.Text
+End Sub
+
+Private Sub cmdBack_Click()
+ Unload Me
+ frmMain.Show
+End Sub
+
+Private Sub cmdChange_Click()
+txtSID.Locked = False
+txtCNAME.Locked = False
+txtAID.Locked = False
+txtDATE.Locked = False
+txtNUMBER.Locked = False
+txtCONTACT.Locked = False
+txtSUBTOTAL.Locked = False
+txtDISCOUNT.Locked = False
+txtVAT.Locked = False
+txtTOTAL.Locked = False
+txtAID.Visible = False
+End Sub
+
+Private Sub cmdDone_Click()
+adcSale.Refresh
+txtSID.Locked = True
+txtCNAME.Locked = True
+txtAID.Locked = True
+txtDATE.Locked = True
+txtNUMBER.Locked = True
+txtCONTACT.Locked = True
+txtSUBTOTAL.Locked = True
+txtDISCOUNT.Locked = True
+txtVAT.Locked = True
+txtTOTAL.Locked = True
+txtAID.Visible = True
+End Sub
+
+Private Sub cmdErase_Click()
+varL = MsgBox("Are you sure you want to delete this record?", vbYesNo, "Update")
+If varL = vbYes Then
+    adcSale.Recordset.Delete
+    MsgBox "Record deleted successfully.", vbInformation, "Update"
+End If
+End Sub
+
+Private Sub cmdNew_Click()
+txtSID.Locked = False
+txtCNAME.Locked = False
+txtAID.Locked = False
+txtDATE.Locked = False
+txtNUMBER.Locked = False
+txtCONTACT.Locked = False
+txtSUBTOTAL.Locked = False
+txtDISCOUNT.Locked = False
+txtVAT.Locked = False
+txtTOTAL.Locked = False
+txtAID.Visible = False
+
+adcSale.Recordset.MoveLast
+SID = Right(txtSID, 5)
+adcSale.Recordset.AddNew
+txtSID.Text = "S" + CStr(SID + 1)
+txtDATE.Text = Date
+
+txtCNAME.SetFocus
+End Sub
+
+Private Sub cmdOK_Click()
+adcSale.Recordset.Save
+txtSID.Locked = True
+txtCNAME.Locked = True
+txtAID.Locked = True
+txtDATE.Locked = True
+txtNUMBER.Locked = True
+txtCONTACT.Locked = True
+txtSUBTOTAL.Locked = True
+txtDISCOUNT.Locked = True
+txtVAT.Locked = True
+txtTOTAL.Locked = True
+txtAID.Visible = True
+MsgBox "Record saved successfully!", vbInformation, "Update"
+End Sub
+
+Private Sub Command7_Click()
+frmCalculator.Show
+End Sub
+
+Private Sub DataCombo1_Change()
+ 
+End Sub
+
+Private Sub DataCombo1_Click(Area As Integer)
+
+End Sub
+
+
+Private Sub Command8_Click()
+Unload Me
+frmLogin.Show
+End Sub
+
+Private Sub txtAID_KeyPress(KeyAscii As Integer)
+If KeyAscii = 13 Then
+  If (txtAID.Text = "") Or (txtAID.Text <> 5) Then
+  MsgBox "The 'Album ID' field is invalid!", vbCritical, "Input Error"
+  Else
+  txtSUBTOTAL.SetFocus
+  End If
+End If
+End Sub
+
+Private Sub txtCNAME_KeyPress(KeyAscii As Integer)
+If KeyAscii = 13 Then
+  If (txtCNAME.Text = "") Or (IsNumeric(txtCNAME.Text) = True) Or (Len(txtCNAME.Text) > 30) Then
+  MsgBox "The 'Customer Name' field is invalid!", vbCritical, "Input Error"
+  txtCNAME.Text = ""
+  Else
+  txtCONTACT.SetFocus
+  End If
+End If
+End Sub
+
+Private Sub txtCONTACT_KeyPress(KeyAscii As Integer)
+If KeyAscii = 13 Then
+  If (txtCONTACT.Text = "") Or (IsNumeric(txtCONTACT.Text) = False) Or (Len(txtCONTACT.Text) > 11) Or (Val(txtCONTACT.Text) < 0) Then
+  MsgBox "The 'Customer Contact' field is invalid!", vbCritical, "Input Error"
+  txtCONTACT.Text = ""
+  Else
+  txtNUMBER.SetFocus
+  End If
+End If
+End Sub
+
+Private Sub txtDATE_KeyPress(KeyAscii As Integer)
+If KeyAscii = 13 Then
+  If (txtDATE.Text = "") Or (Len(txtDATE.Text) > 10) Then
+  MsgBox "The 'Date of Purchase' field is invalid!", vbCritical, "Input Error"
+  txtDATE.Text = ""
+  Else
+  txtNUMBER.SetFocus
+  End If
+End If
+End Sub
+
+Private Sub txtDISCOUNT_KeyPress(KeyAscii As Integer)
+If KeyAscii = 13 Then
+  If (txtDISCOUNT.Text = "") Or (IsNumeric(txtDISCOUNT.Text) = False) Or (Len(txtDISCOUNT.Text) > 5) Then
+  MsgBox "The 'Discount' field is invalid!", vbCritical, "Input Error"
+  txtDISCOUNT.Text = ""
+  Else
+     txtDISCOUNT.Text = txtSUBTOTAL * (txtDISCOUNT / 100)
+  txtTOTAL = (Val(txtSUBTOTAL) + Val(txtVAT)) - Val(txtDISCOUNT)
+  End If
+End If
+End Sub
+
+Private Sub txtNUMBER_KeyPress(KeyAscii As Integer)
+If KeyAscii = 13 Then
+  
+  
+  
+  If (txtNUMBER.Text = "") Or (IsNumeric(txtNUMBER.Text) = False) Or (Len(txtNUMBER.Text) > 3) Or (Val(txtNUMBER.Text) < 1) Then
+  MsgBox "The 'Quantity' field is invalid!", vbCritical, "Input Error"
+  txtNUMBER.Text = ""
+  
+  Else
+  txtSUBTOTAL.Text = adcAlbum.Recordset.Fields("AlbumPrice").Value * txtNUMBER
+  txtDISCOUNT.Text = 0
+  txtVAT.Text = txtSUBTOTAL * 0.15
+  txtTOTAL = Val(txtSUBTOTAL) + Val(txtVAT)
+  End If
+End If
+
+
+End Sub
+
+
+Private Sub txtSID_KeyPress(KeyAscii As Integer)
+If KeyAscii = 13 Then
+  If txtSID Like "S#####" Then
+  txtCNAME.SetFocus
+  Else
+  MsgBox "The 'Sale Code' field is invalid!", vbCritical, "Input Error"
+  txtSID.Text = ""
+  End If
+End If
+End Sub
+
+Private Sub txtSUBTOTAL_KeyPress(KeyAscii As Integer)
+If KeyAscii = 13 Then
+  If (txtSUBTOTAL.Text = "") Or (IsNumeric(txtSUBTOTAL.Text) = False) Or (Len(txtSUBTOTAL.Text) > 5) Then
+  MsgBox "The 'Sub-Total' field is invalid!", vbCritical, "Input Error"
+  txtSUBTOTAL.Text = ""
+  Else
+  txtDISCOUNT.SetFocus
+  End If
+End If
+End Sub
+
+Private Sub txtTOTAL_KeyPress(KeyAscii As Integer)
+If KeyAscii = 13 Then
+  If (txtTOTAL.Text = "") Or (IsNumeric(txtTOTAL.Text) = False) Or (Len(txtTOTAL.Text) > 5) Then
+  MsgBox "The 'Net Payment' field is invalid!", vbCritical, "Input Error"
+  txtTOTAL.Text = ""
+  Else
+  cmdSAVE.SetFocus
+  End If
+End If
+End Sub
+
+Private Sub txtVAT_KeyPress(KeyAscii As Integer)
+If KeyAscii = 13 Then
+  If (txtVAT.Text = "") Or (IsNumeric(txtVAT.Text) = False) Or (Len(txtVAT.Text) > 5) Then
+  MsgBox "The 'VAT' field is invalid!", vbCritical, "Input Error"
+  txtVAT.Text = ""
+  Else
+  txtTOTAL.SetFocus
+  End If
+End If
+End Sub
+
+
+' that is all
+
